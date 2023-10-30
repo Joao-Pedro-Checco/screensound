@@ -89,11 +89,21 @@ public class Main {
     }
 
     private void searchByArtist() {
-        System.out.println("Busca de músicas por artista");
+        System.out.println("**** BUSCA DE MÚSICAS POR ARTISTA ****");
+        listRegisteredArtists();
+        Artist artist = getArtistByName();
+
+        List<Song> foundSongs = songRepository.findByArtist(artist).stream()
+                .sorted(Comparator.comparing(song -> song.getArtist().getId()))
+                .toList();
+
+        System.out.println("Músicas encontradas para '" + artist.getName() + "':");
+        foundSongs.forEach(System.out::println);
     }
 
     private void listRegisteredArtists() {
         List<Artist> registeredArtists = artistRepository.findAll();
+        System.out.println("Artistas Cadastrados:");
         registeredArtists.forEach(a -> System.out.println(a.getName()));
     }
 
@@ -111,8 +121,21 @@ public class Main {
     }
 
     private Song setSongInfo() {
-        System.out.println("Artistas Cadastrados:");
         listRegisteredArtists();
+        Artist artist = getArtistByName();
+
+        System.out.print("Digite o nome da música: ");
+        String title = scanner.nextLine();
+        System.out.print("Digite o gênero da música: ");
+        SongGenre genre = SongGenre.valueOf(scanner.nextLine().toUpperCase());
+
+        Song song = new Song(title, genre);
+        artist.addSong(song);
+
+        return song;
+    }
+
+    private Artist getArtistByName() {
         String artistName = setArtistName();
         Optional<Artist> artist = artistRepository.findByNameIgnoreCase(artistName);
 
@@ -122,14 +145,6 @@ public class Main {
             artist = artistRepository.findByNameIgnoreCase(artistName);
         }
 
-        System.out.print("Digite o nome da música: ");
-        String title = scanner.nextLine();
-        System.out.print("Digite o gênero da música: ");
-        SongGenre genre = SongGenre.valueOf(scanner.nextLine().toUpperCase());
-
-        Song song = new Song(title, genre);
-        artist.get().addSong(song);
-
-        return song;
+        return artist.get();
     }
 }
