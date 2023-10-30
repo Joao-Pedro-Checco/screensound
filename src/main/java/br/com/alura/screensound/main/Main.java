@@ -7,6 +7,7 @@ import br.com.alura.screensound.model.song.SongGenre;
 import br.com.alura.screensound.repository.ArtistRepository;
 import br.com.alura.screensound.repository.SongRepository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -80,7 +81,11 @@ public class Main {
     }
 
     private void listAllSongs() {
-        System.out.println("Listagem de músicas");
+        System.out.println("**** MÚSICAS CADASTRADAS ****");
+        List<Song> registeredSongs = songRepository.findAll().stream()
+                .sorted(Comparator.comparing(song -> song.getArtist().getId()))
+                .toList();
+        registeredSongs.forEach(System.out::println);
     }
 
     private void searchByArtist() {

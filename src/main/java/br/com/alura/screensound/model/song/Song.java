@@ -11,7 +11,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-@ToString
 public class Song {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,5 +27,12 @@ public class Song {
     public Song(String title, SongGenre genre) {
         this.title = title;
         this.genre = genre;
+    }
+
+    @Override
+    public String toString() {
+        return "Título: " + this.getTitle()
+                + " | Artista: " + this.getArtist().getName()
+                + " | Gênero: " + this.getGenre();
     }
 }
