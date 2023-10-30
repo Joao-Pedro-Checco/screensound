@@ -28,4 +28,9 @@ public class Artist {
 
     @OneToMany(mappedBy = "artist")
     private List<Song> songs = new ArrayList<>();
+
+    public Artist(String name, ArtistType type) {
+        this.name = name;
+        this.type = type;
+    }
 }

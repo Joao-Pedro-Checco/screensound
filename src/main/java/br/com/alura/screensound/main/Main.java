@@ -1,9 +1,21 @@
 package br.com.alura.screensound.main;
 
+import br.com.alura.screensound.model.artist.Artist;
+import br.com.alura.screensound.model.artist.ArtistType;
+import br.com.alura.screensound.repository.ArtistRepository;
+import br.com.alura.screensound.repository.SongRepository;
+
 import java.util.Scanner;
 
 public class Main {
     private final Scanner scanner = new Scanner(System.in);
+    private final ArtistRepository artistRepository;
+    private final SongRepository songRepository;
+
+    public Main(ArtistRepository artistRepository, SongRepository songRepository) {
+        this.artistRepository = artistRepository;
+        this.songRepository = songRepository;
+    }
 
     public void showMenu() {
         System.out.println("**** SCREEN SOUND MÚSICAS ****");
@@ -42,7 +54,14 @@ public class Main {
     }
 
     private void registerArtist() {
-        System.out.println("Cadastro de artista");
+        System.out.println("**** CADASTRO DE ARTISTA ****");
+        boolean willContinue = true;
+        while (willContinue) {
+            Artist artist = setArtistInfo();
+            artistRepository.save(artist);
+            System.out.print("Deseja cadastrar mais artistas [S/N]? ");
+            willContinue = !scanner.nextLine().equalsIgnoreCase("n");
+        }
     }
 
     private void registerSong() {
@@ -55,5 +74,14 @@ public class Main {
 
     private void searchByArtist() {
         System.out.println("Busca de músicas por artista");
+    }
+
+    private Artist setArtistInfo() {
+        System.out.print("Digite o nome do artista: ");
+        String nome = scanner.nextLine();
+        System.out.print("Digite o tipo do artista (SOLO, GRUPO, BANDA, DUPLA): ");
+        ArtistType tipo = ArtistType.valueOf(scanner.nextLine().toUpperCase());
+
+        return new Artist(nome, tipo);
     }
 }
