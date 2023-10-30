@@ -97,8 +97,12 @@ public class Main {
                 .sorted(Comparator.comparing(song -> song.getArtist().getId()))
                 .toList();
 
-        System.out.println("Músicas encontradas para '" + artist.getName() + "':");
-        foundSongs.forEach(System.out::println);
+        if (foundSongs.isEmpty()) {
+            System.out.println("Não encontrei músicas desse artista cadastradas");
+        } else {
+            System.out.println("Músicas encontradas para '" + artist.getName() + "':");
+            foundSongs.forEach(System.out::println);
+        }
     }
 
     private void listRegisteredArtists() {
