@@ -98,7 +98,7 @@ public class Main {
                 .toList();
 
         if (foundSongs.isEmpty()) {
-            System.out.println("Não encontrei músicas desse artista cadastradas");
+            System.out.println("Não encontrei músicas cadastradas para '" + artist.getName() + "'");
         } else {
             System.out.println("Músicas encontradas para '" + artist.getName() + "':");
             foundSongs.forEach(System.out::println);
