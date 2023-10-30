@@ -2,9 +2,13 @@ package br.com.alura.screensound.main;
 
 import br.com.alura.screensound.model.artist.Artist;
 import br.com.alura.screensound.model.artist.ArtistType;
+import br.com.alura.screensound.model.song.Song;
+import br.com.alura.screensound.model.song.SongGenre;
 import br.com.alura.screensound.repository.ArtistRepository;
 import br.com.alura.screensound.repository.SongRepository;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Main {
@@ -65,7 +69,14 @@ public class Main {
     }
 
     private void registerSong() {
-        System.out.println("Cadastro de música");
+        System.out.println("**** CADASTRO DE MÚSICA ****");
+        boolean willContinue = true;
+        while (willContinue) {
+            Song song = setSongInfo();
+            songRepository.save(song);
+            System.out.print("Deseja cadastrar mais músicas [S/N]? ");
+            willContinue = !scanner.nextLine().equalsIgnoreCase("n");
+        }
     }
 
     private void listAllSongs() {
@@ -76,12 +87,44 @@ public class Main {
         System.out.println("Busca de músicas por artista");
     }
 
-    private Artist setArtistInfo() {
-        System.out.print("Digite o nome do artista: ");
-        String nome = scanner.nextLine();
-        System.out.print("Digite o tipo do artista (SOLO, GRUPO, BANDA, DUPLA): ");
-        ArtistType tipo = ArtistType.valueOf(scanner.nextLine().toUpperCase());
+    private void listRegisteredArtists() {
+        List<Artist> registeredArtists = artistRepository.findAll();
+        registeredArtists.forEach(a -> System.out.println(a.getName()));
+    }
 
-        return new Artist(nome, tipo);
+    private String setArtistName() {
+        System.out.print("Digite o nome do artista: ");
+        return scanner.nextLine();
+    }
+
+    private Artist setArtistInfo() {
+        String name = setArtistName();
+        System.out.print("Digite o tipo do artista (SOLO, GRUPO, BANDA, DUPLA): ");
+        ArtistType type = ArtistType.valueOf(scanner.nextLine().toUpperCase());
+
+        return new Artist(name, type);
+    }
+
+    private Song setSongInfo() {
+        System.out.println("Artistas Cadastrados:");
+        listRegisteredArtists();
+        String artistName = setArtistName();
+        Optional<Artist> artist = artistRepository.findByNameIgnoreCase(artistName);
+
+        while (artist.isEmpty()) {
+            System.out.println("Artista não encontrado! Tente novamente!");
+            artistName = setArtistName();
+            artist = artistRepository.findByNameIgnoreCase(artistName);
+        }
+
+        System.out.print("Digite o nome da música: ");
+        String title = scanner.nextLine();
+        System.out.print("Digite o gênero da música: ");
+        SongGenre genre = SongGenre.valueOf(scanner.nextLine().toUpperCase());
+
+        Song song = new Song(title, genre);
+        artist.get().addSong(song);
+
+        return song;
     }
 }

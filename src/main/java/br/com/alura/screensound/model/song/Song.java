@@ -24,4 +24,9 @@ public class Song {
 
     @ManyToOne
     private Artist artist;
+
+    public Song(String title, SongGenre genre) {
+        this.title = title;
+        this.genre = genre;
+    }
 }

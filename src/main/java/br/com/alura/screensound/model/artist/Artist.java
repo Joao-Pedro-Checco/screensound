@@ -26,11 +26,16 @@ public class Artist {
     @Enumerated(EnumType.STRING)
     private ArtistType type;
 
-    @OneToMany(mappedBy = "artist")
+    @OneToMany(mappedBy = "artist", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Song> songs = new ArrayList<>();
 
     public Artist(String name, ArtistType type) {
         this.name = name;
         this.type = type;
+    }
+
+    public void addSong(Song song) {
+        song.setArtist(this);
+        this.songs.add(song);
     }
 }

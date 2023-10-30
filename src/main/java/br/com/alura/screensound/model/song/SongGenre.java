@@ -8,10 +8,11 @@ public enum SongGenre {
     JAZZ,
     FUSION,
     BEBOP,
-    J_ROCK,
-    J_POP,
-    K_POP,
+    JROCK,
+    JPOP,
+    KPOP,
     SAMBA,
     MPB,
-    METAL
+    METAL,
+    LOFI
 }
